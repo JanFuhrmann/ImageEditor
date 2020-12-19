@@ -22,8 +22,7 @@ public class Fenster extends javax.swing.JFrame {
     private static final long serialVersionUID = 1L;
 
     BufferedImage bi = null;
-    BufferedImage bildOriginal = null; // Originalbild, falls bi schon
-				       // bearbeitet wurde
+    BufferedImage bildOriginal = null; // Originalbild, falls bi schon bearbeitet wurde
     BufferedImage bispeicher = null;
     BufferedImage letztesBild = null;
     int aktuellehoehe = 0, aktuellebreite = 0, xStart = 0, yStart = 0,

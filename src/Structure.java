@@ -28,17 +28,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 public class Structure extends JFrame {
-    private final JLabel lblFilterStrength = new JLabel("Filter strength:");
     private final JLabel lblFile = new JLabel("File: ");
     private final JTextField txtFile = new JTextField();
-    private final JButton btnApply = new JButton("Ready");
-    private final JButton btnFilterToWhole = new JButton("Apply filter on whole picture");
+    private final JButton btnApply = new JButton("Apply filter");
     private final JButton btnSaveImage = new JButton("Save Picture");
     private final JButton btnChooseFile = new JButton("Choose");
     private final JButton btnBack = new JButton("\u25C4");
     private final JButton btnForth = new JButton("\u25BA");
     private final JButton btnPickColor = new JButton("Color");
-    private final JButton btnFrame = new JButton("Frame");
     private final JCheckBox checkboxDraw = new JCheckBox("Draw");
     private final JCheckBox checkboxEraser = new JCheckBox("Eraser");
     private final JCheckBox checkboxSaveChanges = new JCheckBox("Save changes");
@@ -56,8 +53,8 @@ public class Structure extends JFrame {
 
     private BufferedImage editedImage = null, originalImage = null, backupImage = null;
     private final ArrayList<BufferedImage> lastImages = new ArrayList<>(), nextImages = new ArrayList<>();
-    private int recentHeight = 0, recentWidth = 0, xStart = 0, yStart = 0, xEnd = 0, yEnd = 0, xEnd2 = 0, yEnd2 = 0, xStart2 = 0, yStart2 = 0, size = 0;
-    private boolean erase = false, draw = false, start = false, alreadyStarted = false, savePicture = false;
+    private int recentHeight = 0, recentWidth = 0, xStart = 0, yStart = 0, xEnd = 0, yEnd = 0, xStart2 = 0, yStart2 = 0;
+    private boolean erase = false, draw = false, start = false, savePicture = false;
     private String selection;
     private final int[] rgbOfPoint = new int[3];
 
@@ -93,42 +90,35 @@ public class Structure extends JFrame {
     private void initializeElements() {
         // Fonts and text size
         Font font18 = new Font("Tahoma", Font.PLAIN, 18);
-        Font font20 = new Font("Tahoma", Font.PLAIN, 20);
         lblFile.setFont(font18);
-        lblFilterStrength.setFont(font20);
         btnChooseFile.setFont(font18);
-        btnFilterToWhole.setFont(font18);
-        btnApply.setFont(font20);
-        checkboxEraser.setFont(font20);
-        checkboxDraw.setFont(font20);
+        btnApply.setFont(font18);
+        checkboxEraser.setFont(font18);
+        checkboxDraw.setFont(font18);
         checkboxSaveChanges.setFont(new Font("Tahoma", Font.PLAIN, 14));
         comboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
         // Position and size
         lblFile.setBounds(10, 10, 40, 20);
-        lblFilterStrength.setBounds(1056, 400, 154, 16);
         txtFile.setBounds(60, 10, 350, 25);
         btnChooseFile.setBounds(420, 10, 100, 25);
         btnSaveImage.setBounds(530, 10, 110, 25);
         btnBack.setBounds(650, 10, 50, 25);
         btnForth.setBounds(710, 10, 50, 25);
-        btnFilterToWhole.setBounds(973, 600, 288, 59);
-        btnApply.setBounds(1045, 350, 127, 42);
-        btnFrame.setBounds(1000, 10, 75, 25);
-        btnPickColor.setBounds(1166, 156, 97, 25);
+        btnApply.setBounds(850, 500, 200, 40);
+        btnPickColor.setBounds(970, 65, 80, 25);
         checkboxSaveChanges.setBounds(770, 9, 125, 25);
-        checkboxEraser.setBounds(1045, 119, 127, 33);
-        checkboxDraw.setBounds(1045, 157, 113, 25);
-        comboBox.setBounds(973, 61, 266, 22);
-        pnlImage.setBounds(22, 42, 805, 805);
-        pnlPreview.setBounds(961, 194, 300, 300);
-        slider.setBounds(15, 700, 288, 66);
+        checkboxEraser.setBounds(850, 45, 100, 25);
+        checkboxDraw.setBounds(850, 65, 100, 25);
+        comboBox.setBounds(850, 100, 200, 25);
+        pnlImage.setBounds(22, 45, 805, 805);
+        pnlPreview.setBounds(850, 180, 200, 200);
+        slider.setBounds(850, 125, 200, 25);
 
         // Listener
         btnChooseFile.addActionListener(e -> loadImage());
         btnSaveImage.addActionListener(e -> saveImage());
-        btnFilterToWhole.addActionListener(e -> applyFilterOnWhole());
-        btnApply.addActionListener(e -> selectPoint());
+        btnApply.addActionListener(e -> applyFilterOnWhole());
         btnBack.addActionListener(arg -> {
             if (!nextImages.contains(editedImage)) {
                 nextImages.add(editedImage);
@@ -157,13 +147,22 @@ public class Structure extends JFrame {
             pnlPreview.setBackground(JColorChooser.showDialog(null,
                     "Select Color...", null));
         });
-        btnFrame.addActionListener(arg -> {
-            Frame frame = new Frame();
-            frame.setVisible(true);
-        });
         checkboxSaveChanges.addActionListener(e -> savePicture = !savePicture);
-        checkboxEraser.addActionListener(e -> erase());
-        checkboxDraw.addActionListener(arg0 -> draw());
+        checkboxEraser.addActionListener(e -> {
+            erase = !erase;
+            checkboxDraw.setSelected(false);
+            draw = false;
+            slider.setVisible(false);
+            btnPickColor.setVisible(false);
+        });
+        checkboxDraw.addActionListener(arg0 -> {
+            draw = !draw;
+            btnPickColor.setVisible(draw);
+            pnlPreview.setVisible(draw);
+            slider.setVisible(draw);
+            checkboxEraser.setSelected(false);
+            erase = false;
+        });
         comboBox.addActionListener(e -> getSelection());
         pnlImage.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -198,10 +197,12 @@ public class Structure extends JFrame {
         });
 
         // Visibility
-        lblFilterStrength.setVisible(false);
         btnApply.setVisible(false);
         btnPickColor.setVisible(false);
-        slider.setVisible(false);
+        pnlImage.setVisible(false);
+        comboBox.setVisible(false);
+        checkboxEraser.setVisible(false);
+        checkboxDraw.setVisible(false);
 
         // Other
         checkboxSaveChanges.setToolTipText("Effects are saved");
@@ -220,20 +221,17 @@ public class Structure extends JFrame {
         contentPane.add(txtFile);
         contentPane.add(btnChooseFile);
         contentPane.add(btnSaveImage);
-        contentPane.add(btnFilterToWhole);
+        contentPane.add(btnApply);
         contentPane.add(checkboxSaveChanges);
         contentPane.add(checkboxEraser);
         contentPane.add(comboBox);
         contentPane.add(pnlImage);
-        contentPane.add(btnApply);
         contentPane.add(pnlPreview);
-        contentPane.add(lblFilterStrength);
         contentPane.add(slider);
         contentPane.add(btnBack);
         contentPane.add(btnForth);
         contentPane.add(checkboxDraw);
         contentPane.add(btnPickColor);
-        contentPane.add(btnFrame);
     }
 
     /**
@@ -297,6 +295,7 @@ public class Structure extends JFrame {
                                     db += c2.getBlue();
                                 }
                             }
+                            if (sliderValue == 0) sliderValue = 1;
                             dr /= (sliderValue * sliderValue);
                             dg /= (sliderValue * sliderValue);
                             db /= (sliderValue * sliderValue);
@@ -336,6 +335,9 @@ public class Structure extends JFrame {
                             red = pxlRed;
                             blue = pxlBlue;
                             green = pxlGreen;
+                        } else {
+                            // original picture
+                            rgb[x][y] = new Color(pxlRed, pxlGreen, pxlBlue);
                         }
                     } else {
                         // original picture
@@ -362,36 +364,10 @@ public class Structure extends JFrame {
         }
     }
 
-    /**
-     * Select a point
-     */
-    protected void selectPoint() {
-        if (selection.equals("Point")) {
-            alreadyStarted = !alreadyStarted;
-            if (savePicture) {
-                backupImage = editedImage;
-            }
-            applyFilter();
-        }
-    }
-
     protected void getSelection() {
         selection = (String) comboBox.getSelectedItem();
-        if (selection.equals("Black & White")) {
-            lblFilterStrength.setVisible(true);
-            lblFilterStrength.setText("Black & White Strength:");
-            slider.setVisible(true);
-        } else if (selection.equals("Blurred") || selection.equals("Warm") || selection.equals("Point")) {
-            lblFilterStrength.setVisible(true);
-            //lblFilterStrength.setText("Filter:");
-            slider.setVisible(true);
-            if (selection.equals("Point")) {
-                btnApply.setVisible(true);
-            }
-        } else {
-            lblFilterStrength.setVisible(false);
-            slider.setVisible(false);
-        }
+        pnlPreview.setVisible(selection.equals("Point"));
+        slider.setVisible(selection.equals("Black & White") || selection.equals("Blurred") || selection.equals("Warm") || selection.equals("Point"));
     }
 
     /**
@@ -409,11 +385,11 @@ public class Structure extends JFrame {
         if (draw) {
             Graphics2D g_bi = editedImage.createGraphics();
             g_bi.setColor(pnlPreview.getBackground());
-            g_bi.fillRect(x, y, 1, 1);
+            int sliderValue = slider.getValue()/4;
+            g_bi.fillRect(x - (sliderValue / 2), y - (sliderValue / 2), sliderValue, sliderValue);
             pnlImage.repaint();
-        }
-        if (erase) {
-            size = slider.getValue() / 5; // size of eraser
+        } else if (erase) {
+            int size = slider.getValue() / 5; // size of eraser
             Graphics2D g_bi = editedImage.createGraphics();
             Color[][] rgb = new Color[width][height];
             for (int i = 0; i < size; i++) {
@@ -450,17 +426,15 @@ public class Structure extends JFrame {
                     backupImage = editedImage;
                 }
             } else {
-                xEnd2 = x;
-                yEnd2 = y;
                 xEnd = x;
                 yEnd = y;
-                if (xEnd2 < xStart2) {
+                if (x < xStart2) {
                     xEnd = xStart2;
-                    xStart = xEnd2;
+                    xStart = x;
                 }
-                if (yEnd2 < yStart2) {
+                if (y < yStart2) {
                     yEnd = yStart2;
-                    yStart = yEnd2;
+                    yStart = y;
                 }
                 applyFilter();
             }
@@ -501,7 +475,7 @@ public class Structure extends JFrame {
             // Point Preview
             pnlPreview.setVisible(true);
             pnlPreview.setBackground(new Color(rgbOfPoint[0], rgbOfPoint[1], rgbOfPoint[2]));
-
+            applyFilterOnWhole();
         }
     }
 
@@ -512,29 +486,6 @@ public class Structure extends JFrame {
         start = false;
         if (savePicture) {
             backupImage = editedImage;
-        }
-    }
-
-    /**
-     * This function is called when eraser is selected
-     */
-    protected void erase() {
-        erase = !erase;
-        lblFilterStrength.setText("Eraser Size:");
-        lblFilterStrength.setVisible(erase);
-        slider.setVisible(erase);
-    }
-
-    /**
-     * When draw button is clicked/checked
-     */
-    protected void draw() {
-        draw = !draw;
-        if (draw) {
-            btnPickColor.setVisible(true);
-        } else {
-            btnPickColor.setVisible(false);
-            pnlPreview.setVisible(false);
         }
     }
 
@@ -562,8 +513,18 @@ public class Structure extends JFrame {
                 backupImage = editedImage; // backup image
                 lastImages.clear(); // clear old savings
                 nextImages.clear(); // clear
+                btnApply.setVisible(true);
+                checkboxEraser.setVisible(true);
+                checkboxDraw.setVisible(true);
+                comboBox.setVisible(true);
+                pnlImage.setVisible(true);
                 pnlImage.repaint(); // repaint panel
             } catch (IOException e) {
+                btnApply.setVisible(false);
+                checkboxEraser.setVisible(false);
+                checkboxDraw.setVisible(false);
+                comboBox.setVisible(false);
+                pnlImage.setVisible(false);
                 System.out.println("Error while reading the file (" + e + ")");
                 JOptionPane.showMessageDialog(null, "File could not be read!", "Error", JOptionPane.PLAIN_MESSAGE);
             }
