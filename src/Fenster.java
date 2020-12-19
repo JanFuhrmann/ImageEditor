@@ -43,7 +43,6 @@ public class Fenster extends javax.swing.JFrame {
 	jButton1.setVisible(false);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void initComponents() {
 
 	jTextField1 = new javax.swing.JTextField();

@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -7,7 +6,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 
 
-public class Rahmen extends JFrame {
+public class Frame extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
@@ -18,7 +17,7 @@ public class Rahmen extends JFrame {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
 		try {
-		    Rahmen frame = new Rahmen();
+		    Frame frame = new Frame();
 		    frame.setVisible(true);
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -30,7 +29,7 @@ public class Rahmen extends JFrame {
     /**
      * Create the frame.
      */
-    public Rahmen() {
+    public Frame() {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 999, 500);
 	contentPane = new JPanel();
