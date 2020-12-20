@@ -42,15 +42,13 @@ public class Gesichterkennung extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
-	EventQueue.invokeLater(new Runnable() {
-	    public void run() {
-		try {
-		    Gesichterkennung frame = new Gesichterkennung();
-		    frame.setVisible(true);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-	    }
+	EventQueue.invokeLater(() -> {
+	try {
+		Gesichterkennung frame = new Gesichterkennung();
+		frame.setVisible(true);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 	});
     }
 
@@ -105,10 +103,10 @@ public class Gesichterkennung extends JFrame {
 		Graphics2D g_bi = bi.createGraphics();
 		for (int xwert = 0; xwert < anzahlx; xwert++) {
 		    for (int ywert = 0; ywert < anzahly; ywert++) {
-			int ro = 0, gr = 0, bl = 0, co = 0;
-			co = bildOriginal.getRGB(xwert + (int) (Math.random()),
+			int ro = 0, gr = 0, bl = 0, pxlColor = 0;
+			pxlColor = bildOriginal.getRGB(xwert + (int) (Math.random()),
 				ywert + (int) (Math.random()));
-			Color c = new Color(co);
+			Color c = new Color(pxlColor);
 			bl += c.getBlue();
 			gr += c.getGreen();
 			ro += c.getRed();

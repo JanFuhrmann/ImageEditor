@@ -27,7 +27,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
-public class Structure extends JFrame {
+/**
+ * @author JanFuhrmann
+ */
+public class ImageEditor extends JFrame {
     private final JLabel lblFile = new JLabel("File: ");
     private final JTextField txtFile = new JTextField();
     private final JButton btnApply = new JButton("Apply filter");
@@ -65,7 +68,7 @@ public class Structure extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                Structure frame = new Structure();
+                ImageEditor frame = new ImageEditor();
                 frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -76,18 +79,18 @@ public class Structure extends JFrame {
     /**
      * Create the frame
      */
-    public Structure() {
+    public ImageEditor() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close operation
         setBounds(10, 10, 1500, 750); // standard size (if not fullscreen)
         contentPane.setLayout(null); // mandatory for creating the layout
         setContentPane(contentPane);
-        initializeElements();
+        initComponents();
     }
 
     /**
      * This function initializes all elements (e.g. size, position, textSize)
      */
-    private void initializeElements() {
+    private void initComponents() {
         // Fonts and text size
         Font font18 = new Font("Tahoma", Font.PLAIN, 18);
         lblFile.setFont(font18);
@@ -167,13 +170,13 @@ public class Structure extends JFrame {
         pnlImage.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                Structure.this.mouseDragged(e);
+                ImageEditor.this.mouseDragged(e);
             }
         });
         pnlImage.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                Structure.this.mouseReleased();
+                ImageEditor.this.mouseReleased();
             }
 
             @Override
@@ -184,7 +187,7 @@ public class Structure extends JFrame {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                Structure.this.mouseClicked(e);
+                ImageEditor.this.mouseClicked(e);
             }
         });
         slider.addMouseMotionListener(new MouseMotionAdapter() {
@@ -247,7 +250,7 @@ public class Structure extends JFrame {
             Graphics2D graphics = editedImage.createGraphics();
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    int pxlRed = 0, pxlGreen = 0, pxlBlue = 0, pxlColor = 0;
+                    int pxlRed = 0, pxlGreen = 0, pxlBlue = 0, pxlColor;
                     if (savePicture) {
                         pxlColor = backupImage.getRGB(x + (int) (Math.random()), y + (int) (Math.random()));
                     } else {
@@ -364,6 +367,9 @@ public class Structure extends JFrame {
         }
     }
 
+    /**
+     * Show elements if specific items are selected
+     */
     protected void getSelection() {
         selection = (String) comboBox.getSelectedItem();
         pnlPreview.setVisible(selection.equals("Point"));
@@ -371,7 +377,7 @@ public class Structure extends JFrame {
     }
 
     /**
-     * When mouse was dragged
+     * When mouse was dragged on panel
      *
      * @param mouseEvent The specific Event
      */
@@ -398,9 +404,9 @@ public class Structure extends JFrame {
                             && y - j + (size / 2) < height
                             && x - i + (size / 2) > -1
                             && y - j + (size / 2) > -1) {
-                        int co = originalImage.getRGB(x - i + (size / 2), y
+                        int pxlColor = originalImage.getRGB(x - i + (size / 2), y
                                 - j + (size / 2));
-                        Color c = new Color(co);
+                        Color c = new Color(pxlColor);
                         int b = c.getBlue();
                         int g = c.getGreen();
                         int r = c.getRed();
@@ -442,7 +448,7 @@ public class Structure extends JFrame {
     }
 
     /**
-     * When mouse was clicked
+     * When mouse was clicked on panel
      *
      * @param mouseEvent The specific event
      */
@@ -455,15 +461,15 @@ public class Structure extends JFrame {
             int r = 0;
             int b = 0;
             int g = 0;
-            int co = 0;
+            int pxlColor;
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     if (savePicture) {
-                        co = backupImage.getRGB(x, y);
+                        pxlColor = backupImage.getRGB(x, y);
                     } else {
-                        co = editedImage.getRGB(x, y);
+                        pxlColor = editedImage.getRGB(x, y);
                     }
-                    Color c = new Color(co);
+                    Color c = new Color(pxlColor);
                     b += c.getBlue();
                     g += c.getGreen();
                     r += c.getRed();
@@ -480,7 +486,7 @@ public class Structure extends JFrame {
     }
 
     /**
-     * When mouse was released
+     * When mouse was released on panel
      */
     protected void mouseReleased() {
         start = false;
