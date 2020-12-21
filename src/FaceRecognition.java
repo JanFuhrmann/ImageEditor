@@ -84,7 +84,7 @@ public class FaceRecognition extends JFrame {
     }
 
     /**
-     * Detect the faces
+     * Detect the faces (For now there is only a filter which detects edges)
      */
     private void detect() {
         int width = originalImage.getWidth();
