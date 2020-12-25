@@ -91,7 +91,6 @@ public class ImageFromImages extends JFrame {
                 pnlOriginalImage.repaint();
             } catch (Exception e) {
                 System.out.println("Error while choosing image: " + e.getMessage());
-                JOptionPane.showMessageDialog(null, "No File selected!", "Warning: No File selected", JOptionPane.PLAIN_MESSAGE);
             }
         });
         btnChooseDirectory.addActionListener(arg0 -> {
@@ -102,7 +101,6 @@ public class ImageFromImages extends JFrame {
                 btnSaveDirectory.setVisible(true);
             } catch (Exception e) {
                 System.out.println("Error while choosing directory: " + e.getMessage());
-                JOptionPane.showMessageDialog(null, "No File selected!", "Warning: No File selected", JOptionPane.PLAIN_MESSAGE);
             }
         });
         btnSaveDirectory.addActionListener(arg0 -> {
@@ -183,7 +181,7 @@ public class ImageFromImages extends JFrame {
         System.out.println("Found " + numberOfFiles + " files in " + file);
         imageDirData = file + "°" + numberOfFiles + "#";
         for (String image : files) {
-            if (image.contains(".JPG") || image.contains(".jpg")) {
+            if (image.contains(".JPG") || image.contains(".jpg")|| image.contains(".PNG")|| image.contains(".png")) {
                 System.out.println("Found image: " + image);
                 readRGBFromImage(image, file.getAbsolutePath());
             } else {
